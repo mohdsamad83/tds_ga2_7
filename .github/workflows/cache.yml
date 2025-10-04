@@ -13,4 +13,4 @@ jobs:
           path: node_modules
           key: cache-820edea
       - name: echo cache status
-        run: echo Cache hit status: ${{ steps.prime-cache-820edea.outputs.cache-hit }}
+        run: echo Cache hit status: `${{ steps.prime-cache-820edea.outputs.cache-hit }}`
