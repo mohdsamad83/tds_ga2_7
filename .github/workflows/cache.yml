@@ -1,16 +1,37 @@
-name: CI Cache Workflow
-on: [push]
+name: Prime and Test Cache (cache-820edea)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:    # allows manual run from Actions UI
+
 jobs:
-  build:
+  prime-cache:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # This step will attempt to restore the cache with the exact key "cache-820edea".
+      # It exposes an output "cache-hit" (true/false).
       - name: prime-cache-820edea
-        id: cache-820edea
+        id: prime-cache-820edea
         uses: actions/cache@v4
         with:
-          path: node_modules
+          path: .cache
           key: cache-820edea
-      - name: echo cache status
-        run: echo Cache hit status: ${{ steps.prime-cache-820edea.outputs.cache-hit }}
+
+      # Create files that should be stored in the cache. On the first run the cache will be a miss,
+      # but the action will upload whatever is in .cache at the end of the job using the given key.
+      - name: Create cache contents
+        run: |
+          mkdir -p .cache
+          echo "primed at $(date -u)" > .cache/primed.txt
+          ls -la .cache
+
+      # Echo whether the cache was a hit or miss (this proves the cache step output works).
+      - name: show-cache-result
+        run: |
+          echo "prime-cache-820edea outputs:"
+          echo "  cache-hit: ${{ steps.prime-cache-820edea.outputs.cache-hit }}"
+          echo "  cache-key: ${{ steps.prime-cache-820edea.outputs.cache-key }}"
