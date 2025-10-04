@@ -1,5 +1,6 @@
-name: Test Cache Step
+name: CI Cache Workflow
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
