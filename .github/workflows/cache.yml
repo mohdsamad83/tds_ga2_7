@@ -6,12 +6,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: prime-cache-820edea
-        id: prime-cache-820edea
+
+      - name: Cache node_modules
+        id: cache-node-modules
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: cache-820edea
-      - name: echo cache status
-        run: echo Cache hit status: ${{ steps.prime-cache-820edea.outputs.cache-hit }}
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Echo cache status
+        run: echo Cache hit status: ${{ steps.cache-node-modules.outputs.cache_hit }}
 
