@@ -1,0 +1,27 @@
+name: Cache Dependencies
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        id: prime-cache-820edea
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            # Add other directories or files you want to cache
+          key: cache-820edea
+
+      - name: Show cache hit/miss status
+        run: |
+          echo "Cache hit status: ${{ steps.prime-cache-820edea.outputs.cache-hit }}"
+
+      # Add your build or test steps here
+      - name: Run a sample command
+        run: echo "Build or test steps go here"
